@@ -4,16 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ARLGameplayInterface.h"
 #include "ARLItemChest.generated.h"
 
 
 class UStaticMeshComponent;
 
 UCLASS()
-class ACTIONROGUELIKE_API AARLItemChest : public AActor
+class ACTIONROGUELIKE_API AARLItemChest : public AActor, public IARLGameplayInterface
 {
 private:
 	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+	float TargetPitch;
 
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -32,4 +37,7 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
+private:
+	// The "_Implementation" suffix is added because the base function is a BlueprintNativeEvent
+	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
 };

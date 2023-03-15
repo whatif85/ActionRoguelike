@@ -8,29 +8,29 @@
 
 AARLExplosiveBarrel::AARLExplosiveBarrel()
 {
-	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>("MeshComponent");
-	MeshComp->SetSimulatePhysics(true);
-	MeshComp->SetNotifyRigidBodyCollision(true);
+	this->MeshComp = CreateDefaultSubobject<UStaticMeshComponent>("MeshComponent");
+	this->MeshComp->SetSimulatePhysics(true);
+	this->MeshComp->SetNotifyRigidBodyCollision(false); // avoid physics affect explosion events when touching other objects (such as the floor)
 	// Enabling Simulate physics automatically changes the Profile to PhysicsActor in Blueprint, in C++ we need to change this manually.
-	MeshComp->SetCollisionProfileName(UCollisionProfile::PhysicsActor_ProfileName);
-	RootComponent = MeshComp;
+	this->MeshComp->SetCollisionProfileName(UCollisionProfile::PhysicsActor_ProfileName);
+	RootComponent = this->MeshComp;
 
-	ForceComp = CreateDefaultSubobject<URadialForceComponent>("ForceComponent");
-	ForceComp->SetupAttachment(MeshComp);
+	this->ForceComp = CreateDefaultSubobject<URadialForceComponent>("ForceComponent");
+	this->ForceComp->SetupAttachment(this->MeshComp);
 
 	// Leaving this on applies small constant force via component 'tick' (Optional)
-	ForceComp->SetAutoActivate(false);
+	this->ForceComp->SetAutoActivate(false);
 
-	ForceComp->Radius = 750.0f;
-	ForceComp->ImpulseStrength = 2500.0f; // Alternative: 200000.0 if bImpulseVelChange = false
+	this->ForceComp->Radius = 750.0f;
+	this->ForceComp->ImpulseStrength = 2500.0f; // Alternative: 200000.0 if bImpulseVelChange = false
 	// Optional, ignores 'Mass' of other objects (if false, the impulse strength will be much higher to push most objects depending on Mass)
-	ForceComp->bImpulseVelChange = true;
+	this->ForceComp->bImpulseVelChange = true;
 
 	// Optional, default constructor of component already adds 4 object types to affect, excluding WorldDynamic
-	ForceComp->AddCollisionChannelToAffect(ECC_WorldDynamic);
+	this->ForceComp->AddCollisionChannelToAffect(ECollisionChannel::ECC_WorldDynamic);
 
 	// Binding either in constructor or in PostInitializeComponents() below
-	//MeshComp->OnComponentHit.AddDynamic(this, &AARLExplosiveBarrel::OnActorHit);
+	//this->MeshComp->OnComponentHit.AddDynamic(this, &AARLExplosiveBarrel::OnActorHit);
 }
 
 

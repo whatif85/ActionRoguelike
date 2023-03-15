@@ -9,6 +9,7 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UARLInteractionComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API AARLCharacter : public ACharacter
@@ -21,10 +22,13 @@ protected:
 	TSubclassOf<AActor> ProjectileClass; // Blueprint class
 
 	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* SpringArmComponent{ nullptr };
+	USpringArmComponent* SpringArmComp{ nullptr };
 
 	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* CameraComponent{ nullptr };
+	UCameraComponent* CameraComp{ nullptr };
+
+	UPROPERTY(VisibleAnywhere)
+	UARLInteractionComponent* InteractionComp{ nullptr };
 
 
 public:
@@ -35,7 +39,7 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
-	
+
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
@@ -44,4 +48,6 @@ protected:
 	void MoveRight(float AxisValue);
 
 	void PrimaryAttack();
+
+	void PrimaryInteract();
 };

@@ -2,6 +2,8 @@
 
 #include "ARLCharacter.h"
 
+#include "ARLInteractionComponent.h"
+
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -14,14 +16,16 @@ AARLCharacter::AARLCharacter()
 	AActor::PrimaryActorTick.bCanEverTick = true;
 	APawn::AutoPossessPlayer = EAutoReceiveInput::Player0;
 
-	this->SpringArmComponent = UObject::CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
-	this->SpringArmComponent->USceneComponent::SetupAttachment(AActor::RootComponent); // Capsule component
-	this->SpringArmComponent->bUsePawnControlRotation = true;
+	this->SpringArmComp = UObject::CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
+	this->SpringArmComp->USceneComponent::SetupAttachment(AActor::RootComponent); // Capsule component
+	this->SpringArmComp->bUsePawnControlRotation = true;
 
-	this->CameraComponent = UObject::CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
-	this->CameraComponent->USceneComponent::SetupAttachment(this->SpringArmComponent);
+	this->CameraComp = UObject::CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
+	this->CameraComp->USceneComponent::SetupAttachment(this->SpringArmComp);
 
-	ACharacter::GetCharacterMovement()->bOrientRotationToMovement = true;
+	this->InteractionComp = UObject::CreateDefaultSubobject<UARLInteractionComponent>(TEXT("InteractionComp"));
+
+	ACharacter::GetCharacterMovement()->UCharacterMovementComponent::bOrientRotationToMovement = true;
 	APawn::bUseControllerRotationYaw = false;
 }
 
@@ -67,6 +71,7 @@ void AARLCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
 	PlayerInputComponent->BindAction("PrimaryAttack", EInputEvent::IE_Pressed, this, &AARLCharacter::PrimaryAttack);
+	PlayerInputComponent->BindAction("PrimaryInteract", EInputEvent::IE_Pressed, this, &AARLCharacter::PrimaryInteract);
 }
 
 void AARLCharacter::MoveForward(float AxisValue)
@@ -113,4 +118,12 @@ void AARLCharacter::PrimaryAttack()
 
 	// Spawn Actor
 	AActor::GetWorld()->UWorld::SpawnActor<AActor>(this->ProjectileClass, SpawnTransformMatrix, SpawnParams);
+}
+
+void AARLCharacter::PrimaryInteract()
+{
+	if (this->InteractionComp != nullptr)
+	{
+		this->InteractionComp->PrimaryInteract();
+	}
 }

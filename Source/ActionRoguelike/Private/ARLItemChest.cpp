@@ -14,6 +14,8 @@ AARLItemChest::AARLItemChest()
 
 	this->LidMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LidMesh"));
 	this->LidMesh->SetupAttachment(this->BaseMesh);
+
+	this->TargetPitch = 110.0f;
 }
 
 void AARLItemChest::BeginPlay()
@@ -26,5 +28,10 @@ void AARLItemChest::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AARLItemChest::Interact_Implementation(APawn* InstigatorPawn)
+{
+	this->LidMesh->SetRelativeRotation(FRotator(this->TargetPitch, 0.0f, 0.0f));
 }
 
