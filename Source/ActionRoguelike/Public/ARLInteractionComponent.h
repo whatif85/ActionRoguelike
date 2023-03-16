@@ -13,6 +13,7 @@ class ACTIONROGUELIKE_API UARLInteractionComponent : public UActorComponent
 private:
 	GENERATED_BODY()
 
+
 public:	
 	UARLInteractionComponent();
 
@@ -22,5 +23,5 @@ protected:
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void PrimaryInteract();
+	void PrimaryInteract() const;
 };

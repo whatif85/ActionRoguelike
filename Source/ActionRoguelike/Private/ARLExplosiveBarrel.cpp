@@ -55,7 +55,7 @@ void AARLExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComponent, AActor* 
 	GEngine->AddOnScreenDebugMessage(1, 5, FColor::Green, FString::Printf(TEXT("OtherActor: %s, at game time: %f"), *GetNameSafe(OtherActor), GetWorld()->TimeSeconds));
 	//UE_LOG(LogTemp, Warning, TEXT("OtherActor: %s, at game time: %f"), *GetNameSafe(OtherActor), GetWorld()->TimeSeconds);
 
-	FString CombinedString = FString::Printf(TEXT("Hit at location: %s"), *Hit.ImpactPoint.ToString());
+	const FString CombinedString = FString::Printf(TEXT("Hit at location: %s"), *Hit.ImpactPoint.ToString());
 	DrawDebugString(GetWorld(), Hit.ImpactPoint, CombinedString, nullptr, FColor::Green, 2.0f, true);
 
 	// Detailed info on logging in ue4

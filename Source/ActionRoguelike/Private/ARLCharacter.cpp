@@ -35,7 +35,7 @@ void AARLCharacter::BeginPlay()
 	
 }
 
-void AARLCharacter::Tick(float DeltaTime)
+void AARLCharacter::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -74,7 +74,7 @@ void AARLCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("PrimaryInteract", EInputEvent::IE_Pressed, this, &AARLCharacter::PrimaryInteract);
 }
 
-void AARLCharacter::MoveForward(float AxisValue)
+void AARLCharacter::MoveForward(const float AxisValue)
 {
 	// Where the actor is looking at
 	FRotator ControlRot = APawn::GetControlRotation();
@@ -88,7 +88,7 @@ void AARLCharacter::MoveForward(float AxisValue)
 	APawn::AddMovementInput(ControlRot.Vector(), AxisValue);
 }
 
-void AARLCharacter::MoveRight(float AxisValue)
+void AARLCharacter::MoveRight(const float AxisValue)
 {
 	// Where the actor is looking at
 	FRotator ControlRot = APawn::GetControlRotation();
@@ -107,17 +107,26 @@ void AARLCharacter::MoveRight(float AxisValue)
 
 void AARLCharacter::PrimaryAttack()
 {
-	// Get Socket name from skeletal mesh
-	FVector RightHandLocation = ACharacter::GetMesh()->USceneComponent::GetSocketLocation("Muzzle_01");
+	// Play animation
+	ACharacter::PlayAnimMontage(this->AttackAnim);
 
-	FTransform SpawnTransformMatrix = FTransform(APawn::GetControlRotation(), RightHandLocation);
+	// Trigger following function after a short 0.2-ms delay
+	AActor::GetWorldTimerManager().SetTimer(this->TimerHandle_PrimaryAttack, this, &AARLCharacter::PrimaryAttack_TimeElapsed, 0.2f);
+}
+
+void AARLCharacter::PrimaryAttack_TimeElapsed() const
+{
+	// Get Socket name from skeletal mesh
+	const FVector RightHandLocation = ACharacter::GetMesh()->USceneComponent::GetSocketLocation("Muzzle_01");
+
+	const FTransform SpawnTransformMatrix = FTransform(APawn::GetControlRotation(), RightHandLocation);
 
 	FActorSpawnParameters SpawnParams;
 	// Specify spawn rules
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	// Spawn Actor
-	AActor::GetWorld()->UWorld::SpawnActor<AActor>(this->ProjectileClass, SpawnTransformMatrix, SpawnParams);
+	AActor::GetWorld()->UWorld::SpawnActor<AActor>(this->BP_MagicProjectile, SpawnTransformMatrix, SpawnParams);
 }
 
 void AARLCharacter::PrimaryInteract()

@@ -25,7 +25,7 @@ void UARLInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 
 }
 
-void UARLInteractionComponent::PrimaryInteract()
+void UARLInteractionComponent::PrimaryInteract() const
 {
 	FCollisionObjectQueryParams ObjectQueryParams;
 	ObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldDynamic);

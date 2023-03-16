@@ -15,12 +15,12 @@ class ACTIONROGUELIKE_API AARLExplosiveBarrel : public AActor
 {
 	GENERATED_BODY()
 
+
 public:
 	// Sets default values for this actor's properties
 	AARLExplosiveBarrel();
 
 protected:
-
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 	UStaticMeshComponent* MeshComp;
 
