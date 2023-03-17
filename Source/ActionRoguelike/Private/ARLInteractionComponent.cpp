@@ -67,6 +67,7 @@ void UARLInteractionComponent::PrimaryInteract() const
 				// Safe cast does not require to check if nullptr
 				APawn* MyPawn = Cast<APawn>(MyOwner);
 
+				// Call interface event (Message)
 				IARLGameplayInterface::Execute_Interact(HitActor, MyPawn);
 			}
 		}
